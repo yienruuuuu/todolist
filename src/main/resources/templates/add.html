@@ -5,8 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<h1 th:text="${hello}"></h1>
-<p th:if="${gender} == 'male'">我是男生</p>
-<p th:if="${gender} == 'female'">我是女生</p>
+<h2>Add Form</h2>
+<h1>顯示資料</h1>
+<p th:text="'Name：' + ${person.name}"></p>
+<p th:text="'Password：'+ ${person.password}"></p>
 </body>
 </html>

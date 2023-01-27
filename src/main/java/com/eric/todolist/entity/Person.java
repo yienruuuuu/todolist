@@ -1,6 +1,6 @@
 package com.eric.todolist.entity;
 /**
- * @fileName Todo
+ * @fileName Person
  * @author Eric
  * @date 2023/1/18下午 02:34
  */
@@ -16,25 +16,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "todo")
-@Getter
-@Setter
-@ToString
-public class ToDo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+@Getter @Setter
+public class Person {
 
-    @Column
-    String task;
-
-    @Column
-    Integer status;
-
-    @Column
-    String createTime;
-
-    @Column
-    String updateTime;
+    String name;
+    String password;
 }
