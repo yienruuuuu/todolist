@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.TimeZone;
 
 /**
@@ -18,48 +19,45 @@ import java.util.TimeZone;
 @Service
 public class ToDoService {
     @Autowired
-    ToDoDao tododao;
+    ToDoDao todoDao;
 
-    public Iterable<ToDo> getToDos() {
-        return tododao.findAll();
+    public Iterable<ToDo> getTodos() {
+        return todoDao.findAll();
     }
 
-    public Iterable<ToDo> createTodo(ToDo todo) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String date = df.format(new Date());
-        todo.setCreateTime(date);
-        todo.setUpdateTime(date);
-        todo.setStatus(0);
-        tododao.save(todo);
-        return getToDos();
+    public Integer createTodo(ToDo todo) {
+        SimpleDateFormat formatDateToData = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        todo.setCreateTime(formatDateToData.format(new Date()).toString());
+        todo.setUpdateTime(formatDateToData.format(new Date()).toString());
+        ToDo rltTodo = todoDao.save(todo);
+        return rltTodo.getId();
     }
 
-    public ToDo updateToDo(Integer id, ToDo todo) {
-        try {
-            ToDo resToDo = findById(id);
-            Integer status = todo.getStatus();
-            resToDo.setStatus(status);
-            return tododao.save(resToDo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    public Boolean updateTodo(Integer id,ToDo todo) {
+        Optional<ToDo> isExistTodo = findById(id);
+        if (! isExistTodo.isPresent()) {
+            return false;
         }
+        ToDo newTodo = isExistTodo.get();
+        if (todo.getStatus() == null) {
+            return false;
+        }
+        newTodo.setStatus(todo.getStatus());
+        todoDao.save(newTodo);
+        return true;
     }
 
-    public ToDo findById(Integer id) {
-        ToDo todo = tododao.findById(id).get();
+    public Optional<ToDo> findById(Integer id) {
+        Optional<ToDo> todo = todoDao.findById(id);
         return todo;
     }
 
-    public Boolean deleteToDo(Integer id) {
-        try {
-            ToDo rsToDo = findById(id);
-            tododao.delete(rsToDo);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+    public Boolean deleteTodo(Integer id) {
+        Optional<ToDo> findTodo = findById(id);
+        if (!findTodo.isPresent()) {
             return false;
         }
+        todoDao.deleteById(id);
+        return true;
     }
 }
