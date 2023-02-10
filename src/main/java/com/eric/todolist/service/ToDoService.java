@@ -43,8 +43,12 @@ public class ToDoService {
             return false;
         }
         newTodo.setStatus(todo.getStatus());
-        todoDao.save(newTodo);
-        return true;
+        try {
+            todoDao.save(newTodo);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     public Optional<ToDo> findById(Integer id) {
